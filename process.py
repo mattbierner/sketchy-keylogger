@@ -39,7 +39,6 @@ def split_runs(data):
                 if in_group:
                     bucket.append(line)
     
-    buckets.append(bucket)
     return [split_levels(x) for x in buckets if len(x) > 5]
 
 def split_levels(data):
