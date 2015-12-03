@@ -2,6 +2,7 @@ from datetime import datetime
 import math
 import re
 from config import *
+from process import *
 
 # Style
 COLORS = {
@@ -36,105 +37,6 @@ def action_color(key):
 def level_color(level):
     return LEVEL_COLORS[get_area(level)]
 
-
-def process_line(line):
-    """Parse a single line in the keylog."""
-    match = re.match('(.+?)\s+(UP|DOWN)\s+(\d+)', line)
-    date = None
-    try:
-        date = datetime.strptime(match.group(1), '%Y-%m-%d %H:%M:%S.%f')
-    except:
-        date = datetime.strptime(match.group(1), '%Y-%m-%d %H:%M:%S')
-    return {
-        'date': date,
-        'up': match.group(2) == 'UP',
-        'code': int(match.group(3))
-    }
-
-def split_runs(data):
-    """Split a keylog into individual runs."""
-    in_group = False
-    buckets = []
-    bucket = []
-    for line in data:
-        line = process_line(line)
-        code = line['code']
-        if code == END:
-            in_group = False
-            buckets.append(bucket)
-            bucket = []
-        elif code == START:
-            in_group = True
-        else:
-            if code in GAME_KEYS or code == LEVEL:
-                if in_group:
-                    bucket.append(line)
-    
-    buckets.append(bucket)
-    return [split_levels(x) for x in buckets if len(x) > 5]
-
-def split_levels(data):
-    """Split raw run data into levels."""
-    levels = []
-    level = []
-    for line in data:
-        code = line['code']
-        if code == LEVEL:
-            levels.append(level)
-            level = []
-        else:
-            if code in GAME_KEYS:
-                level.append(line)
-    
-    levels.append(level)
-    return [x for x in levels if len(x) > 5]
-
-def process_run(raw_levels):
-    """ """
-    levels = []
-    for raw_level in raw_levels:
-        level = []
-        start = raw_level[0]['date']
-        state = []
-        for command in raw_level:
-            code = command['code']
-            end = command['date']
-            if code in ACTIONS:
-                if command['up'] == False:
-                    level.append({
-                        'action': True,
-                        'end': end,
-                        'key': code
-                    })
-            elif code in MOVEMENTS:
-                if command['up'] and code in state:
-                    if len(state):
-                        level.append({
-                            'state': start,
-                            'end': end,
-                            'duration': end - start,
-                            'keys': list(state)
-                        })
-                    state.remove(code)
-                elif not command['up'] and not code in state:
-                    if len(state):
-                        level.append({
-                            'state': start,
-                            'end': end,
-                            'duration': end - start,
-                            'keys': list(state)
-                        })
-                    state.append(code)   
-                start = end
-        levels.append(level)
-    
-    # Remove initial actions before movement (pressed to skip transition)
-    for level in levels:
-        while len(level) > 0 and level[0].get('action', False):
-            del level[0]
-
-    print (len(levels), [len(x) for x in levels])
-    return levels            
 
 
 with open('raw_data/keylog4.txt', 'r') as f:
@@ -171,7 +73,7 @@ if True:
     
     for run in game_runs:
         t.home()
-        for i, level in enumerate(run):
+        for i, level in enumerate(run['levels']):
             t.down()
             t.color(level_color(i)[:3])
             for move in level:
@@ -208,7 +110,7 @@ else:
         widths = []
         movement_colors = []
         action_colors = []
-        for i, level in enumerate(run):
+        for i, level in enumerate(run['levels']):
             current_level_color = level_color(i)
 
             for move in level:

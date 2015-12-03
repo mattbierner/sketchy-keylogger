@@ -1,5 +1,3 @@
-# Config file for Spelunky gameplay
-
 # Game Keys
 SPRINT = SHIFT = 160 # Windows key code
 JUMP = Z = 90
@@ -17,6 +15,11 @@ START = T = 84
 END = I = 73
 LEVEL = K = 75
 
+# Single press keys
 ACTIONS = [JUMP, WHIP, USE, BOMB, ROPE, BUY]
+
+# Press + hold keys
 MOVEMENTS = [SPRINT, UP, DOWN, LEFT, RIGHT]
+
+# All keys used for gameplay
 GAME_KEYS = ACTIONS + MOVEMENTS
