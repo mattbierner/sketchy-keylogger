@@ -1,4 +1,4 @@
-# Draw a full run using turtles
+# Draw each individual level in an given area
 import argparse
 import turtle
 from common import *
@@ -17,22 +17,23 @@ parser.add_argument('--raw', action='store_true', default=False,
     help='Load a raw file instead of json?')
 
 parser.add_argument('--animate', action='store_true', help='Use animation?')
-    
 parser.add_argument('--axis', action='store_true', help='Draw axis?')
-
+parser.add_argument('--area', type=int, default=0, help='Which area to draw.')
 
 args = parser.parse_args()
 
 game_runs = load_raw_run(args.file) if args.raw else load_run(args.file)
-
+area = args.area
 
 # Compute the bounds
 max_x = 1
 max_y = 1
 
 for run in game_runs:
-    pos = (0, 0)
     for level in run['levels']:
+        if level['area'] != area:
+            continue
+        pos = (0, 0)
         for move in level['events']:
             if not move.get('action', False):
                 keys = move['keys']
@@ -56,14 +57,17 @@ t = turtle.Turtle()
 
 if not args.animate:
     t.tracer(False) # disable animation
-
+    
 if args.axis:
     t.color(0.5, 0.5, 0.5)
     draw_axis(t, screen_width, screen_height)
 
 for run in game_runs:
-    t.home()
-    for i, level in enumerate(run['levels']):
+    levels = run['levels']
+    for i, level in enumerate(levels):
+        if level['area'] != area:
+            continue
+        t.home()
         t.down()
         t.color(level_color(i)[:3])
         for move in level['events']:
@@ -78,6 +82,11 @@ for run in game_runs:
                 y = get_y(keys) * mul
                 t.setpos(x + t.xcor(), y + t.ycor())
         t.up()
+        
+        # draw death / end of game differently from advance level
+        if i == len(levels) - 1:
+            t.color(0, 0, 0)
+        
+        t.stamp()
 
-    t.stamp()
 turtle.done()

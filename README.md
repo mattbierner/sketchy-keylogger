@@ -47,8 +47,13 @@ You can also combine multiple files.
 $ python process.py in/file/keylog1.txt in/file/keylog2.txt --out out/file.json
 ```
 
-### `draw_run_turtle.py`
+### `draw_run_turtle.py DATA_FILE`
 Draw a complete set of runs using the [Python turtle module][turtle]. Resets drawing to (0, 0) after each death.
+
+* `DATA_FILE` - File to draw.
+* `--axis` - Draw axis.
+* `--raw` - Load and process raw keylog data instead of json. 
+* `--animate` - By default, does not animate drawing. Use `--animate` to watch turtle draw.
 
 ```sh
 $ python draw_run_turtle.py runs/spelunky1.json
@@ -77,6 +82,24 @@ $ python draw_run_matplot.py runs/spelunky1.json
 </div>
 
 Produced plot should be interactive unlike the turtle one, but animation is not supported.
+
+### `draw_area_turtle.py DATA_FILE --area AREA`
+Draw all level runs in a given area using the [Python turtle module][turtle]. Resets drawing to (0, 0) after each level in the area.
+
+* `DATA_FILE` - File to draw.
+* `--area AREA` - Which area of the game to draw (mines, jungle, ...). Zero indexed.
+* `--axis` - Draw axis.
+* `--raw` - Load and process raw keylog data instead of json. 
+* `--animate` - By default, does not animate drawing. Use `--animate` to watch turtle draw.
+
+
+```sh
+$ python draw_area_turtle.py runs/spelunky-combined.json --area 2 --axis
+```
+
+<div align="center" >
+    <img src="https://raw.githubusercontent.com/mattbierner/sketchy-keylogger/master/documentation/turtle-area2.png" alt="turtle" />
+</div>
 
 
 
