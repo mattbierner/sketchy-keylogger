@@ -127,6 +127,12 @@ def default_json_serializer(obj):
         return json.JSONEncoder().default(obj)
 
 
+def load_raw_run(path):
+    with open(path, 'r') as f:
+        runs = split_runs(f.readlines())
+        return [process_run(run) for run in runs]
+
+
 if __name__ == "__main__":
     # Simple command line usage to convert raw key logs to json.
     import argparse        
