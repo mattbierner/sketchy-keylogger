@@ -56,7 +56,7 @@ Draw a complete set of runs using the [Python turtle module][turtle]. Resets dra
 * `--animate` - By default, does not animate drawing. Use `--animate` to watch turtle draw.
 
 ```sh
-$ python draw_run_turtle.py runs/spelunky1.json
+$ python draw_run_turtle.py runs/spelunky-combined.json
 ```
 
 <div align="center" >
@@ -64,17 +64,15 @@ $ python draw_run_turtle.py runs/spelunky1.json
 </div>
 
 
-By default, does not animate drawing. Use `--animate` to watch turtle draw.
-
-```sh
-$ python draw_run_turtle.py --animate runs/spelunky1.json
-```
-
-### `draw_run_matplot.py`
+### `draw_run_matplot.py DATA_FILE`
 Draw a complete set of runs using the [Python turtle module][turtle]. Resets drawing to (0, 0) after each death.
 
+* `DATA_FILE` - File to draw.
+* `--axis` - Draw axis.
+* `--raw` - Load and process raw keylog data instead of json. 
+
 ```sh
-$ python draw_run_matplot.py runs/spelunky1.json
+$ python draw_run_matplot.py runs/spelunky-combined.json
 ```
 
 <div align="center" >

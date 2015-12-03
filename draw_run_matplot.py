@@ -10,7 +10,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('file', help='Data file path.')
 parser.add_argument('--raw', action='store_true', default=False,
     help='Load a raw file instead of json?')
-    
+   
+parser.add_argument('--axis', action='store_true', help='Draw axis?')
+ 
 args = parser.parse_args()
 
 game_runs = load_raw_run(args.file) if args.raw else load_run(args.file)
@@ -59,6 +61,10 @@ frame1 = plt.gca()
 plt.axis(frameon=False)
 frame1.axes.get_xaxis().set_visible(False)
 frame1.axes.get_yaxis().set_visible(False)
+
+if args.axis:
+    plt.axhline(0, color=(0.5, 0.5, 0.5))
+    plt.axvline(0, color=(0.5, 0.5, 0.5))
 
 plt.tight_layout()
 plt.show()
