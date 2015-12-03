@@ -6,20 +6,20 @@ from process import *
 
 # Style
 COLORS = {
-    JUMP: (1, 0, 0, 0.5),
-    WHIP: (0, 1, 0, 0.5),
-    BOMB: (0, 0, 1, 0.5),
-    ROPE: (1, 1, 0, 0.5),
-    USE: (1, 0, 1, 0.5),
-    BUY: (0, 1, 1, 0.5),
+    JUMP: (0.48, 0.52, 0.47, 0.5),
+    WHIP: (0.75, 0.54, 0.29, 0.5),
+    BOMB: (1.00, 0.00, 0.00, 0.5),
+    ROPE: (0.50, 0.33, 0.20, 0.5),
+    USE:  (0.00, 0.00, 0.00, 0.5),
+    BUY:  (1.00, 0.69, 0.23, 0.5),
 }
 
 LEVEL_COLORS = [
-    (0, 0, 0, 0.5), # Mine
-    (0, 1, 0, 0.5), # Jungle
-    (0, 0, 1, 0.5), # Ice
-    (1, 0, 0, 0.5), # Temple
-    (1, 0, 1, 0.5), # Boss 
+    (0.85, 0.80, 0.62, 1), # Mine
+    (0.66, 0.80, 0.40, 1), # Jungle
+    (0.20, 0.60, 0.86, 1), # Ice
+    (0.97, 0.48, 0.32, 1), # Temple
+    (0.86, 0.20, 0.13, 1), # Boss 
 ]
 
 DEFAULT_COLOR = (0, 0, 0, 1)
@@ -65,7 +65,7 @@ def get_y(keys):
     else:
         return 0
 
-if True:
+if False:
     import turtle
     
     t = turtle.Turtle()
@@ -137,9 +137,12 @@ else:
 
     ax.autoscale()
     plt.axis('equal')
+    ax.set_axis_bgcolor('white')
 
     frame1 = plt.gca()
+    plt.axis(frameon=False)
     frame1.axes.get_xaxis().set_visible(False)
     frame1.axes.get_yaxis().set_visible(False)
-
+    
+    plt.tight_layout()
     plt.show()
