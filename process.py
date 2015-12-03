@@ -112,6 +112,9 @@ def process_run(raw_levels):
             del events[0]
     
     return {
+        'start': levels[0]['start'],
+        'end': levels[-1]['end'],
+        'duration': levels[-1]['end'] - levels[0]['start'],
         'levels': levels
     }
 
