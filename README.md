@@ -1,0 +1,33 @@
+# Sketchy Keylogger
+
+Plotting keyboard input of [Spelunky][] gameplay for fun and profit.
+
+
+## Gameplay Logging
+Keylogger record the following in game actions (targeting Spelunky classic):
+
+* Arrow Keys = Movement
+* Shift = Sprint
+* Z = Jump
+* X = Whip
+* A = Bomb
+* S = Rope
+* C = Use
+* P = Buy
+
+The following keys are used within the key log itself to understand where runs and levels start and end:
+
+* T = Start new game (press at least twice in a row)
+* I = End current game (press at least twice in a row)
+* K = Advance one level
+
+
+## Scripts
+
+#### `keylogger.py`
+Super simple Python2.7 keylogger for windows. Records all key up and key down data while running and writes this data to a file.
+
+Requires [pywin32](http://sourceforge.net/projects/pywin32/) and [pyhook](http://sourceforge.net/projects/pyhook/).
+
+
+[spelunky]: http://www.spelunkyworld.com
