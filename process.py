@@ -132,6 +132,10 @@ def load_raw_run(path):
         runs = split_runs(f.readlines())
         return [process_run(run) for run in runs]
 
+def load_run(path):
+    with open(path, 'r') as f:
+        data = json.load(f)
+    return data
 
 if __name__ == "__main__":
     # Simple command line usage to convert raw key logs to json.

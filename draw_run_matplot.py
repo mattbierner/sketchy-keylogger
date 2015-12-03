@@ -8,11 +8,11 @@ from process import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('file', help='Data file path.')
-parser.add_argument('--raw', action='store_true',
+parser.add_argument('--raw', action='store_true', default=False,
     help='Load a raw file instead of json?')
 
 
-game_runs = load_raw_run(args.file)
+game_runs = load_raw_run(args.file) if args.raw else load_run(args.file)
 
 
 # Plot run
@@ -37,10 +37,9 @@ for run in game_runs:
                 action_colors.append(action_color(key))
             else:
                 keys = move['keys']
-                duration = move['duration']
                 widths.append(2 if SHIFT in keys else 1)
                 movement_colors.append(current_level_color)
-                mul = duration.total_seconds()
+                mul = move['duration']
                 x = get_x(keys) * mul
                 y = get_y(keys) * mul
                 new_pos = [pos[0] + x, pos[1] + y]

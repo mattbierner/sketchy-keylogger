@@ -7,7 +7,7 @@ from process import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('file', help='Data file path.')
-parser.add_argument('--raw', action='store_true',
+parser.add_argument('--raw', action='store_true', default=False,
     help='Load a raw file instead of json?')
 
 parser.add_argument('--animate', action='store_true',
@@ -15,8 +15,7 @@ parser.add_argument('--animate', action='store_true',
 
 args = parser.parse_args()
 
-game_runs = load_raw_run(args.file)
-
+game_runs = load_raw_run(args.file) if args.raw else load_run(args.file)
 
 # Start drawing
 t = turtle.Turtle()
@@ -35,9 +34,8 @@ for run in game_runs:
                 t.dot(None, action_color(key)[:3])
             else:
                 keys = move['keys']
-                duration = move['duration']
                 t.width(2 if SHIFT in keys else 1)
-                mul = duration.total_seconds() * 20
+                mul = move['duration'] * 20
                 x = get_x(keys) * mul
                 y = get_y(keys) * mul
                 t.setpos(x + t.xcor(), y + t.ycor())
