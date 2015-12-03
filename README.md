@@ -7,23 +7,40 @@ Plotting keyboard input of [Spelunky][] gameplay for fun and profit.
 </div>
 
 
-## Gameplay Logging
+## Technique and details
 Keylogger record the following in game actions (targeting Spelunky classic):
 
 * Arrow Keys = Movement
 * Shift = Sprint
-* Z = Jump
-* X = Whip
-* A = Bomb
-* S = Rope
-* C = Use
-* P = Buy
 
 The following keys are used within the key log itself to understand where runs and levels start and end:
 
 * T = Start new game (press at least twice in a row)
 * I = End current game (press at least twice in a row)
 * K = Advance one level
+
+### Movement
+Player movement with the arrow keys is used for drawing. Moving left with the left arrow draws a line to the left of the plot, while holding both the up and right arrows draws a diagonal line towards the upper right in the plot. The length of the line is determined by how long the key was pressed.
+
+Movements lines are colored based level:
+ 
+* Mines - tan
+* Jungle - green
+* Ice - blue
+* Temple - orange
+* Boss - red
+
+Sprinting movement draws a line that is twice as thick as normal movement.
+
+### Actions
+Actions are plotted individually
+
+* Z = Jump - Gray
+* X = Whip - Light brown
+* A = Bomb - Red
+* S = Rope - Dark brown
+* C = Use - Black
+* P = Buy - Gold
 
 
 ## Scripts

@@ -76,6 +76,14 @@ def process_run(raw_levels):
                         'duration': end - end,
                         'key': code
                     })
+                    if len(state):
+                        level.append({
+                            'start': start,
+                            'end': end,
+                            'duration': end - start,
+                            'keys': list(state)
+                        })
+                    start = end
             elif code in MOVEMENTS:
                 if command['up'] and code in state:
                     if len(state):
@@ -86,6 +94,7 @@ def process_run(raw_levels):
                             'keys': list(state)
                         })
                     state.remove(code)
+                    start = end
                 elif not command['up'] and not code in state:
                     if len(state):
                         level.append({
@@ -95,7 +104,7 @@ def process_run(raw_levels):
                             'keys': list(state)
                         })
                     state.append(code)   
-                start = end
+                    start = end
 
         levels.append({
             'area': get_area(i),
