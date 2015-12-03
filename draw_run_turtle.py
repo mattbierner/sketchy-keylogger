@@ -62,7 +62,7 @@ for run in game_runs:
         for move in level['events']:
             if move.get('action', False):
                 key = move['key']
-                t.dot(None, action_color(key)[:3])
+                t.dot(4, action_color(key)[:3])
             else:
                 keys = move['keys']
                 t.width(2 if SHIFT in keys else 1)

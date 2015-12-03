@@ -28,13 +28,13 @@ The following keys are used within the key log itself to understand where runs a
 
 ## Scripts
 
-#### `keylogger.py`
+### `keylogger.py`
 Super simple Python2.7 keylogger for windows. Records all key up and key down data while running and writes this data to a file.
 
 Requires [pywin32](http://sourceforge.net/projects/pywin32/) and [pyhook](http://sourceforge.net/projects/pyhook/).
 
 
-#### `process.py`
+### `process.py`
 Convert keylog to json for processing.
 
 ```sh
@@ -47,7 +47,7 @@ You can also combine multiple files.
 $ python process.py in/file/keylog1.txt in/file/keylog2.txt --out out/file.json
 ```
 
-#### `draw_run_turtle.py`
+### `draw_run_turtle.py`
 Draw a complete set of runs using the [Python turtle module][turtle]. Resets drawing to (0, 0) after each death.
 
 ```sh
@@ -65,7 +65,7 @@ By default, does not animate drawing. Use `--animate` to watch turtle draw.
 $ python draw_run_turtle.py --animate runs/spelunky1.json
 ```
 
-#### `draw_run_matplot.py`
+### `draw_run_matplot.py`
 Draw a complete set of runs using the [Python turtle module][turtle]. Resets drawing to (0, 0) after each death.
 
 ```sh
