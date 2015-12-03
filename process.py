@@ -4,6 +4,7 @@ import json
 import re
 from time import mktime
 from config import *
+from common import get_area
 
 def process_line(line):
     """Parse a single line in the keylog."""
@@ -64,7 +65,7 @@ def process_run(raw_levels):
         level = []
         start = raw_level[0]['date']
         state = []
-        for command in raw_level:
+        for i, command in enumerate(raw_level):
             code = command['code']
             end = command['date']
             if code in ACTIONS:
@@ -98,6 +99,7 @@ def process_run(raw_levels):
                 start = end
         
         levels.append({
+            'area': get_area(i),
             'start': level[0]['start'],
             'end': level[-1]['end'],
             'duration': level[-1]['end'] - level[0]['start'],
