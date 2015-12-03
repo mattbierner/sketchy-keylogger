@@ -1,27 +1,7 @@
 from datetime import datetime
 import math
 import re
-
-# Game Keys
-SPRINT = SHIFT = 160 # Windows key code
-JUMP = Z = 90
-WHIP = X = 88
-UP = 38
-DOWN = 40
-LEFT = 37
-RIGHT = 39
-BOMB = A = 65
-ROPE = S = 83
-USE = C = 67
-BUY = P = 80
-
-START = T = 84
-END = I = 73
-LEVEL = K = 75
-
-ACTIONS = [JUMP, WHIP, USE, BOMB, ROPE, BUY]
-MOVEMENTS = [SPRINT, UP, DOWN, LEFT, RIGHT]
-GAME_KEYS = ACTIONS + MOVEMENTS
+from config import *
 
 # Style
 COLORS = {
@@ -38,8 +18,7 @@ LEVEL_COLORS = [
     (0, 1, 0, 0.5), # Jungle
     (0, 0, 1, 0.5), # Ice
     (1, 0, 0, 0.5), # Temple
-    (1, 0, 1, 0.5), # Boss
-    
+    (1, 0, 1, 0.5), # Boss 
 ]
 
 DEFAULT_COLOR = (0, 0, 0, 1)
