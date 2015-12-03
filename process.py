@@ -60,11 +60,11 @@ def split_levels(data):
 def process_run(raw_levels):
     """Convert raw key up and key downs into actions and movements."""
     levels = []
-    for raw_level in raw_levels:
+    for i, raw_level in enumerate(raw_levels):
         level = []
         start = raw_level[0]['date']
         state = []
-        for i, command in enumerate(raw_level):
+        for command in raw_level:
             code = command['code']
             end = command['date']
             if code in ACTIONS:
@@ -96,7 +96,7 @@ def process_run(raw_levels):
                         })
                     state.append(code)   
                 start = end
-        
+
         levels.append({
             'area': get_area(i),
             'start': level[0]['start'],
