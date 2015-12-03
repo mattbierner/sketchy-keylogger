@@ -142,15 +142,19 @@ if __name__ == "__main__":
     import argparse        
     
     parser = argparse.ArgumentParser(description='Convert raw keylog to json.')
-    parser.add_argument('in_file', help='Raw input data file to process.')
-    parser.add_argument('out_file', help='File to write json results to.')
+    parser.add_argument('in_files', nargs='+',
+        help='Raw input data file to process.')
+    parser.add_argument('--out', dest='out_file', help='File to write json results to.')
     
     args = parser.parse_args()
     
-    with open(args.in_file, 'r') as f:
-        runs = split_runs(f.readlines())
-        game_runs = [process_run(run) for run in runs]
+    game_runs = []
     
+    for in_file in args.in_files:
+        with open(in_file, 'r') as f:
+            runs = split_runs(f.readlines())
+            game_runs.extend(process_run(run) for run in runs)
+        
     with open(args.out_file, 'w') as outfile:
         json.dump(game_runs, outfile, indent = 4,
             default = default_json_serializer)

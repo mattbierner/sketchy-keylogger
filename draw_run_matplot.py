@@ -10,7 +10,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('file', help='Data file path.')
 parser.add_argument('--raw', action='store_true', default=False,
     help='Load a raw file instead of json?')
-
+    
+args = parser.parse_args()
 
 game_runs = load_raw_run(args.file) if args.raw else load_run(args.file)
 
