@@ -71,7 +71,9 @@ def process_run(raw_levels):
                 if command['up'] == False:
                     level.append({
                         'action': True,
+                        'start': end,
                         'end': end,
+                        'duration': end - end,
                         'key': code
                     })
             elif code in MOVEMENTS:
@@ -94,12 +96,19 @@ def process_run(raw_levels):
                         })
                     state.append(code)   
                 start = end
-        levels.append(level)
+        
+        levels.append({
+            'start': level[0]['start'],
+            'end': level[-1]['end'],
+            'duration': level[-1]['end'] - level[0]['start'],
+            'events': level
+        })
     
     # Remove initial actions before movement (pressed to skip transition)
     for level in levels:
-        while len(level) > 0 and level[0].get('action', False):
-            del level[0]
+        events = level['events']
+        while len(events) > 0 and events[0].get('action', False):
+            del events[0]
     
     return {
         'levels': levels

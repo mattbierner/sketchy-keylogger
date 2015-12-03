@@ -1,8 +1,9 @@
 import math
+from config import *
 
 def get_area(level):
     """Get the section of the game a current level is in."""
-    if i >= 15:
+    if level >= 15:
         return 4
     return int(math.floor(level / 4.0))
 

@@ -18,7 +18,7 @@ if False:
         for i, level in enumerate(run['levels']):
             t.down()
             t.color(level_color(i)[:3])
-            for move in level:
+            for move in level['events']:
                 if move.get('action', False):
                     key = move['key']
                     t.dot(None, action_color(key)[:3])
@@ -55,7 +55,7 @@ else:
         for i, level in enumerate(run['levels']):
             current_level_color = level_color(i)
 
-            for move in level:
+            for move in level['events']:
                 if move.get('action', False):
                     key = move['key']
                     dotsx.append(pos[0])
