@@ -7,22 +7,13 @@ Plotting keyboard input of [Spelunky][] gameplay for fun and profit.
 </div>
 
 
-## Technique and details
-Keylogger record the following in game actions (targeting Spelunky classic):
-
-* Arrow Keys = Movement
-* Shift = Sprint
-
-The following keys are used within the key log itself to understand where runs and levels start and end:
-
-* T = Start new game (press at least twice in a row)
-* I = End current game (press at least twice in a row)
-* K = Advance one level
+## Overview
+Player keyboard input is recorded during a game of Spelunky and then reconstructed into an abstract drawing. Player movement with the arrow keys moves the pencil around the canvas, while actions, such as using a bomb, are drawn as little circles on the movement paths. 
 
 ### Movement
-Player movement with the arrow keys is used for drawing. Moving left with the left arrow draws a line to the left of the plot, while holding both the up and right arrows draws a diagonal line towards the upper right in the plot. The length of the line is determined by how long the key was pressed.
+Player movement with the arrow keys is used for drawing. Moving left with the left arrow draws a line to the left, while holding both the up and right arrows draws a diagonal line towards the upper right. The length of the line is determined by how long the key was pressed.
 
-Movements lines are colored based level:
+Movements lines are colored based on game level:
  
 * Mines - tan
 * Jungle - green
@@ -30,10 +21,10 @@ Movements lines are colored based level:
 * Temple - orange
 * Boss - red
 
-Sprinting movement draws a line that is twice as thick as normal movement.
+Sprinting draws a line that is twice as thick as normal movement.
 
 ### Actions
-Actions are plotted individually
+Actions are plotted individually as little dots:
 
 * Z = Jump - Gray
 * X = Whip - Light brown
@@ -41,6 +32,23 @@ Actions are plotted individually
 * S = Rope - Dark brown
 * C = Use - Black
 * P = Buy - Gold
+
+### Meta Keys
+The following keys are used within the key log itself to understand where runs and levels start and end:
+
+* T = Start new game (press at least twice in a row)
+* I = End current game (press at least twice in a row)
+* K = Advance one level
+
+For example, a run where you make it to the third level before dying would look like this (let `~` be any number of game inputs):
+
+```
+ttttt~~k~~k~~iiiii
+```
+
+Anything before `tt` or after `ii` is ignored.
+
+Level durations are taken from first movement key to last key press before `k`. This allows you to press the `X` key to skip the tunnel transition (just don't press any arrow keys to skip).
 
 
 ## Scripts
@@ -99,7 +107,7 @@ $ python draw_run_matplot.py runs/spelunky-combined.json
 Produced plot should be interactive unlike the turtle one, but animation is not supported.
 
 ### `draw_area_turtle.py DATA_FILE --area AREA`
-Draw all level runs in a given area using the [Python turtle module][turtle]. Resets drawing to (0, 0) after each level in the area.
+Draw all level runs in a given area using the [Python turtle module][turtle]. Resets drawing to (0, 0) after each level.
 
 * `DATA_FILE` - File to draw.
 * `--area AREA` - Which area of the game to draw (mines, jungle, ...). Zero indexed.
