@@ -44,9 +44,10 @@ for run in game_runs:
                 max_x = max(max_x, abs(end[0]))
                 max_y = max(max_y, abs(end[1]))
                 pos = end
+                
 
 x_scale = (screen_width / 2.0 - padding) / max_x
-y_scale = (screen_width / 2.0 - padding) / max_y
+y_scale = (screen_height / 2.0 - padding) / max_y
 scale = min(x_scale, y_scale) * zoom
 
 

@@ -17,7 +17,6 @@ args = parser.parse_args()
 
 game_runs = load_raw_run(args.file) if args.raw else load_run(args.file)
 
-
 # Plot run
 fig, ax = plt.subplots()
 

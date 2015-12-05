@@ -45,7 +45,7 @@ for run in game_runs:
                 pos = end
 
 x_scale = (screen_width / 2.0 - padding) / max_x
-y_scale = (screen_width / 2.0 - padding) / max_y
+y_scale = (screen_height / 2.0 - padding) / max_y
 scale = min(x_scale, y_scale) * zoom
 
 
@@ -59,10 +59,10 @@ if not args.animate:
 
 if args.axis:
     t.color(0.5, 0.5, 0.5)
-    draw_axis(t, screen_width, screen_height)
+    draw_axis(t, screen_width, screen_height, origin=(0, 0))
 
 for run in game_runs:
-    t.home()
+    t.setpos(0, 0)
     for i, level in enumerate(run['levels']):
         t.down()
         t.color(level_color(i)[:3])
@@ -79,5 +79,5 @@ for run in game_runs:
                 t.setpos(x + t.xcor(), y + t.ycor())
         t.up()
 
-    t.stamp()
+        t.stamp()
 turtle.done()
