@@ -28,7 +28,7 @@ def is_death_level(i, levels):
 def no_deaths(levels):
     """Filter out level plays where the player died."""
     for i, level in enumerate(levels):
-        if is_death_run(i, levels):
+        if is_death_level(i, levels):
             continue
         yield (i, level)
 
@@ -115,7 +115,7 @@ def load_raw_run_data(path):
 all_run_data = load_raw_run_data('raw_data/combined.txt')
 
 if True:
-    print("\nAvg duration of keypresses")
+    print("\nAvg duration of movement keypresses:")
     counts = {}
     total_times = {}
     
@@ -124,6 +124,8 @@ if True:
         for i, level in enumerate(levels):
             for evt in level['events']:
                 key = evt['key']
+                if not key in MOVEMENTS:
+                    continue
                 if not key in counts:
                     counts[key] = 0
                     total_times[key] = 0
@@ -139,6 +141,35 @@ if True:
     print_key_map(counts)
     print('\navgs')
     print_key_map(avgs)
+
+if True:
+    print("\nAvg duration of movement keypresses per area:")
+    counts = [{}, {}, {}, {}, {}]
+    total_times = [{}, {}, {}, {}, {}]
+    
+    for run in all_run_data:
+        levels = run['levels']
+        for i, level in enumerate(levels):
+            area = get_area(i)
+            for evt in level['events']:
+                key = evt['key']
+                if not key in MOVEMENTS:
+                    continue
+                if not key in counts[area]:
+                    counts[area][key] = 0
+                    total_times[area][key] = 0
+                counts[area][key] += 1
+                total_times[area][key] += evt['duration'].total_seconds()
+
+    for area, keys in enumerate(total_times):
+        avgs = {}
+        for key, sum in keys.iteritems():
+            avgs[key] = float(sum) / counts[area][key]
+    
+        print(area)
+        print_key_map(avgs)
+        print("")
+
 
 if False:
     print("\nDeath duration data")
