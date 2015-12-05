@@ -15,21 +15,23 @@ def level_color(level):
 
 
 def get_x(keys):
+    diag = UP in keys or DOWN in keys
     if LEFT in keys and RIGHT in keys:
         return 0
     elif LEFT in keys:
-        return -1.4142 if UP in keys or DOWN in keys else -1
+        return -0.707 if diag else -1
     elif RIGHT in keys:
-        return 1.4142 if UP in keys or DOWN in keys else 1
+        return 0.707 if diag in keys else 1
     else:
         return 0
 
 def get_y(keys):
+    diag = LEFT in keys or RIGHT in keys
     if UP in keys and DOWN in keys:
         return 0
     elif DOWN in keys:
-        return -1.4142 if LEFT in keys or RIGHT in keys else -1
+        return -0.707 if diag else -1
     elif UP in keys:
-        return 1.4142 if LEFT in keys or RIGHT in keys else 1
+        return 0.707 if diag in keys else 1
     else:
         return 0
