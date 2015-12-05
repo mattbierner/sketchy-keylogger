@@ -169,6 +169,25 @@ if True:
         print(area)
         print_key_map(avgs)
         print("")
+    
+if True:
+    print("\nPercent of time spent sprinting per area:")
+    sprinting_time = [0] * 5
+    total_time = [0] * 5
+    
+    for run in all_run_data:
+        levels = run['levels']
+        for i, level in enumerate(levels):
+            area = get_area(i)
+            total_times[area] += level['duration'].total_seconds()
+            for evt in level['events']:
+                key = evt['key']
+                if key != SPRINT:
+                    continue
+                sprinting_time[area] += evt['duration'].total_seconds()
+
+    for area, sprint_time in enumerate(sprinting_time):
+        print_key_code_pair(area, float(sprint_time) / total_time[area])
 
 
 if False:
