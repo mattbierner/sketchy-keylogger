@@ -2,6 +2,7 @@
 # Plenty of copy+paste and all the good stuff.
 
 import argparse
+from collections import OrderedDict
 from common import *
 from config import *
 from process import *
@@ -60,7 +61,35 @@ def keycode_to_name(code):
 def print_key_code_pair(k, v, format = "%s: %s"):
     print(format % (keycode_to_name(k), v))
 
+def key_sort(x, y):
+    if x[0] in MOVEMENTS and not y[0] in MOVEMENTS:
+        return 1
+    if x[0] in ACTIONS and y[0] in MOVEMENTS:
+        return -1
+    return cmp(x[0], y[0])
+        
 def print_key_map(map, line = "%s: %s"):
+    sorted_map = OrderedDict(sorted(map.items(), cmp=key_sort))
+    for k, v in sorted_map.iteritems():
+        print_key_code_pair(k, v, format=line)
+
+def area_to_name(i):
+    if i == 0:
+        return 'Mines'
+    if i == 1:
+        return 'Jungle'
+    if i == 2:
+        return 'Ice Caves'
+    if i == 3:
+        return 'Temple'
+    if i == 4:
+        return 'Boss'
+    return str(i)
+
+def print_area_pair(k, v, format = "%s: %s"):
+    print(format % (area_to_name(k), v))
+
+def print_area_map(map, format = "%s: %s"):
     for k, v in map.iteritems():
         print_key_code_pair(k, v, format=line)
 
@@ -114,6 +143,30 @@ def load_raw_run_data(path):
 # Build a list of just keypresses
 all_run_data = load_raw_run_data('raw_data/combined.txt')
 
+
+
+if True:
+    print("\nTotal number of keypresses:")
+    
+    count = 0
+    for run in all_run_data:
+        for level in run['levels']:
+            count += len(level['events'])
+    print count
+
+if True:
+    print("\nTotal number keypress of type:")
+    
+    counts = {}
+    for run in all_run_data:
+        for level in run['levels']:
+            for e in level['events']:
+                key = e['key']
+                if not key in counts:
+                    counts[key] = 0
+                counts[key] += 1
+    print_key_map(counts)
+
 if True:
     print("\nAvg duration of movement keypresses:")
     counts = {}
@@ -132,15 +185,8 @@ if True:
                 counts[key] += 1
                 total_times[key] += evt['duration'].total_seconds()
 
-    avgs = {}
-
     for key, sum in total_times.iteritems():
-        avgs[key] = float(sum) / counts[key]
-    
-    print("counts")
-    print_key_map(counts)
-    print('\navgs')
-    print_key_map(avgs)
+        print_key_code_pair(key, float(sum) / counts[key])
 
 if True:
     print("\nAvg duration of movement keypresses per area:")
@@ -162,12 +208,9 @@ if True:
                 total_times[area][key] += evt['duration'].total_seconds()
 
     for area, keys in enumerate(total_times):
-        avgs = {}
+        print(area_to_name(area))
         for key, sum in keys.iteritems():
-            avgs[key] = float(sum) / counts[area][key]
-    
-        print(area)
-        print_key_map(avgs)
+           print_key_code_pair(key, float(sum) / counts[area][key])    
         print("")
     
 if True:
@@ -179,7 +222,7 @@ if True:
         levels = run['levels']
         for i, level in enumerate(levels):
             area = get_area(i)
-            total_times[area] += level['duration'].total_seconds()
+            total_time[area] += level['duration'].total_seconds()
             for evt in level['events']:
                 key = evt['key']
                 if key != SPRINT:
@@ -190,20 +233,101 @@ if True:
         print_key_code_pair(area, float(sprint_time) / total_time[area])
 
 
-if False:
-    print("\nDeath duration data")
-    
-    target_area = 2
+if True:
+    print("\nKeypress per second per area:")
+    presses = [0] * 5
+    total_time = [0] * 5
     
     for run in all_run_data:
         levels = run['levels']
         for i, level in enumerate(levels):
             area = get_area(i)
-            #if area != target_area:
-            #    continue
+            total_time[area] += level['duration'].total_seconds()
+            presses[area] += len(level['events'])
+           
+    for area, press_count in enumerate(presses):
+        print_area_pair(area, float(press_count) / total_time[area])
+
+
+if True:
+    print("\nKeypress per type per area:")
+    presses = [{}, {}, {}, {}, {}]
+    total_runs = [0] * 5
+    
+    for run in all_run_data:
+        levels = run['levels']
+        for i, level in enumerate(levels):
+            area = get_area(i)
+            total_runs[area] += 1
+            for evt in level['events']:
+                key = evt['key']
+                if not key in presses[area]:
+                    presses[area][key] = 0
+                
+                presses[area][key] += 1
+    
+    for area, keys in enumerate(presses):
+        print(area_to_name(area))
+        rate = {}
+        for key, count in keys.iteritems():
+            rate[key] = float(count) / total_runs[area]
+        print_key_map(rate)
+        print("")
+
+if True:
+    print("\nKeypress per type per second per area:")
+    presses = [{}, {}, {}, {}, {}]
+    total_time = [0] * 5
+    
+    for run in all_run_data:
+        levels = run['levels']
+        for i, level in enumerate(levels):
+            area = get_area(i)
+            total_time[area] += level['duration'].total_seconds()
+            for evt in level['events']:
+                key = evt['key']
+                if not key in presses[area]:
+                    presses[area][key] = 0
+                
+                presses[area][key] += 1
+    
+    for area, keys in enumerate(presses):
+        print(area_to_name(area))
+        rate = {}
+        for key, count in keys.iteritems():
+            rate[key] = float(count) / total_time[area]
+        print_key_map(rate)
+        print("")
+
+
+if False:
+    print("\nDeath duration data")
+        
+    for run in all_run_data:
+        levels = run['levels']
+        for i, level in enumerate(levels):
+            area = get_area(i)
             if not is_death_level(i, levels):
                 continue
             print("%s, %s" % (area, level['duration'].total_seconds()))
+     
+if False:
+    print("\nRun Duration data")
+        
+    for run in all_run_data:
+        levels = run['levels'] 
+        print(run['duration'].total_seconds())
+            
+if True:
+    print("\nLevel complete Duration data")
+        
+    for run in all_run_data:
+        levels = run['levels']
+        sum = 0
+        for i, level in no_deaths(levels):
+            print "%s, %s" %(i, sum)
+            sum += level['duration'].total_seconds()
+            
             
 if True:
     print("\nAvg actions per area (no death):")
@@ -218,7 +342,7 @@ if True:
             moves[area] += len([x for x in level['events'] if 'action' in x and x['key']== ROPE])
 
     for i, sum in enumerate(moves):
-         print("%s: %s" % (i, float(sum) / counts[i]))
+         print_area_pair(i, float(sum) / counts[i])
 
 if True:
     print("\nEvents per level:")
@@ -233,7 +357,7 @@ if True:
             moves[area] = moves.get(area, 0) + len([x for x in level['events']])
 
     for i, sum in moves.iteritems():
-        print("%s: %s" % (i, float(sum) / counts[i]))
+        print_area_pair(i, float(sum) / counts[i])
 
 if False:
     print("\nMin events per level:")
@@ -274,9 +398,26 @@ if True:
     print(min_run, max_x)
 
 if True:
+    print("\nFewest moves in level run:")
+    min_run = 0
+    min_level = 0
+    min_keypresses = 100000
+    for r, run in enumerate(all_run_data):
+        levels = run['levels']
+        for i, level in no_deaths(levels):
+            number_keypresses = len(level['events'])
+            if number_keypresses < min_keypresses:
+                min_keypresses = number_keypresses
+                min_run = r
+                min_level = i
+           
+    print(min_run, min_level, min_keypresses)
+    
+
+if True:
     print("\nAvg moves per area (no death)")
     counts = [0] * 5
-    moves = [{}] * 5
+    moves = [{}, {}, {}, {}, {}]
 
     for run in game_runs:
         levels = run['levels']
@@ -289,11 +430,10 @@ if True:
                         moves[area][key] = moves[area].get(key, 0) + 1
 
     for i, move in enumerate(moves):
-        print("%s:" %i)
+        print(area_to_name(i))
         for key, count in move.iteritems():
             print_key_code_pair(key, float(count) / counts[i])
-
-
+        print("")
 
 if True:
     print("\nAvg time per area (no death):")
@@ -307,12 +447,26 @@ if True:
             counts[area] +=  1
             dur[area] += level['duration']
 
-    out_moves = {}
     for i, sum in enumerate(dur):
-        out_moves[i] = float(sum) / counts[i]
+        print_area_pair(i, float(sum) / counts[i])
+   
+if True:
+    print("\nAvg time per death:")
+    counts = [0] * 4
+    dur = [0] * 4
 
-    print_key_map(out_moves)
-    
+    for run in game_runs:
+        levels = run['levels']
+        for i, level in enumerate(levels):
+            if not is_death_level(i, levels) or i == 15:
+                continue
+            area = level['area']
+            counts[area] +=  1
+            dur[area] += level['duration']
+
+    for i, sum in enumerate(dur):
+        print_area_pair(i, float(sum) / counts[i])
+     
 
 if True:
     print("\nAvg time per level (no death):")
@@ -325,8 +479,30 @@ if True:
             counts[i] += 1
             dur[i] += level['duration']
 
-    out_moves = {}
     for i, sum in enumerate(dur):
-        out_moves[i] = float(sum) / counts[i]
+        print(i, float(sum) / counts[i])
 
-    print("\n".join("%s, %s" %(k, v) for k, v in out_moves.iteritems()))
+
+if True:
+    print("\nShortest time per area:")
+    min_duration = [999] * 5
+
+    for run in game_runs:
+        for i, level in no_deaths(run['levels']):
+            area = level['area']
+            min_duration[area] = min(min_duration[area], level['duration'])
+    
+    for area, m in enumerate(min_duration):
+        print_area_pair(area, m)
+        
+if True:
+    print("\nLongest time per area:")
+    max_duration = [0] * 5
+
+    for run in game_runs:
+        for i, level in no_deaths(run['levels']):
+            area = level['area']
+            max_duration[area] = max(max_duration[area], level['duration'])
+    
+    for area, m in enumerate(max_duration):
+        print_area_pair(area, m)
